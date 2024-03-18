@@ -1,0 +1,1 @@
+uvicorn endpoints:app --reload

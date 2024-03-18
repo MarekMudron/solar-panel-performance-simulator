@@ -1,1 +1,4 @@
 /solarenv
+.vscode
+__pycache__
+examples/**
