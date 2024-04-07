@@ -5,8 +5,12 @@ class LocationModel(BaseModel):
     lon: float
     alt: float
 
-class SolarArray(BaseModel):
+class PanelBlock(BaseModel):
     tilt: float
     azimuth: float
-    nameplate:float
-    gamma_pdc: float
+    num_panels:int
+    nameplate_of_one:float
+    gamma_pdc_of_one: float
+
+class String(BaseModel):
+    blocks: list[PanelBlock]

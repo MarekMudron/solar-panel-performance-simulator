@@ -3,7 +3,7 @@ from typing import Union
 from fastapi import FastAPI
 import simulation
 from fastapi.middleware.cors import CORSMiddleware
-from models import LocationModel, SolarArray
+from models import LocationModel, String
 
 app = FastAPI()
 
@@ -23,7 +23,7 @@ app.add_middleware(
 
 
 @app.post("/simulate")
-async def simulate(location: LocationModel, arrays: list[SolarArray]):
+async def simulate(location: LocationModel, arrays: list[String]):
     print(location, arrays)
     output = simulation.run(location, arrays[0])
     return output
