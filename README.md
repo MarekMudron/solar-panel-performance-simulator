@@ -21,4 +21,4 @@ The server offers only single POST endpoint `/simulate`.
 
 5. Run the server
 
-    `./run.sh`
+    `uvicorn endpoints:app`
