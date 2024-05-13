@@ -24,6 +24,5 @@ app.add_middleware(
 
 @app.post("/simulate")
 async def simulate(location: LocationModel, arrays: list[String]):
-    print(location, arrays)
-    output = simulation.run(location, arrays[0])
+    output = simulation.run(location, arrays)
     return output

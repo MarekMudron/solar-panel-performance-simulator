@@ -14,6 +14,8 @@ def get_solar_position_at(location, weather_timesteps):
     solar_position.index += pd.Timedelta('30min')
     return solar_position;
 
+
+
 def get_string_power(string, weather, solar_position):
     parameters = pvlib.temperature.TEMPERATURE_MODEL_PARAMETERS['sapm']['open_rack_glass_polymer']
     string_powers_df = None
@@ -30,13 +32,16 @@ def get_string_power(string, weather, solar_position):
                                                     weather['wind_speed'],
                                                     **parameters)
         block_nameplate = block.nameplate_of_one * block.num_panels
-        block_gamma_pdc = block.gamma_pdc_of_one * block.num_panels
+        block_gamma_pdc = (block.gamma_pdc_of_one/100) 
         block_power = pvlib.pvsystem.pvwatts_dc(irradiance["poa_global"], cell_temperature, block_nameplate, block_gamma_pdc)
         if(string_powers_df is None):
             string_powers_df = block_power
         else:
             string_powers_df = string_powers_df.add(block_power)
     return string_powers_df
+
+
+
 
 def get_system_power(location, strings):
     location = pvlib.location.Location(latitude=location.lat,
@@ -56,21 +61,17 @@ def get_system_power(location, strings):
             system_power_df = system_power_df.add(string_power)
     return system_power_df
 
-def run(location, strings):
-    system_power_df = get_system_power(location, strings)    
 
-    # def get_month(data, month):
-    #     return data[data.index.month==month]
+def run(location, strings):
+    system_power_df = get_system_power(location, strings)
+
     monthly_sum = system_power_df.resample('M').sum()
     monthly_avg_by_time = system_power_df.groupby([system_power_df.index.month, system_power_df.index.time]).mean()
 
-    # Iterate over the groups
     monthly_avgs = {}
     for (month, time), value in monthly_avg_by_time.items():
         if month not in monthly_avgs:
             monthly_avgs[month] = []
-        
-        # Append the average value to the corresponding month list
         monthly_avgs[month].append(value)
     result_dict = {}
     result_dict["monthly_avgs"] = monthly_avgs
